@@ -1,0 +1,233 @@
+mysql> CREATE TABLE Blood_Bank(
+    -> Branch_id varchar(100) NOT NULL,
+    -> Branch_name varchar(100),
+    -> Branch_address varchar(100),
+    -> Contact_no varchar(100),
+    -> PRIMARY KEY(Branch_id));
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> CREATE TABLE Employee(
+    ->     E_id varchar(100) NOT NULL,
+    ->     Ename varchar(100),
+    ->     Age integer,
+    ->     Address varchar(100),
+    ->     Salary  varchar(100),
+    ->     Contact_no varchar(100),
+    ->     Designation varchar(100),
+    ->     Bank_id varchar(100),
+    ->     PRIMARY KEY(E_id),
+    ->     FOREIGN KEY(Bank_id) REFERENCES Blood_Bank(Branch_id));
+Query OK, 0 rows affected (0.13 sec)
+
+
+mysql> CREATE TABLE Stock(
+    -> Stock_id varchar(100) NOT NULL,
+    -> Stock_name varchar(100),
+    -> Bloodgroup varchar(5),
+    -> Quantity  varchar(20),
+    -> B_id varchar(100),
+    -> PRIMARY KEY(Stock_id),
+    -> FOREIGN KEY(B_id) REFERENCES Blood_Bank(Branch_id));
+Query OK, 0 rows affected (1.04 sec)
+
+
+mysql> CREATE TABLE  Medical_Report(
+    -> Report_id varchar(100) NOT NULL,
+    -> D_bloodgroup varchar(5),
+    -> Disease   varchar(100),
+    -> PRIMARY KEY(Report_id));
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> CREATE TABLE  Donor(
+    -> D_id varchar(100) NOT NULL,
+    -> D_name varchar(100),
+    -> Date varchar(100),
+    -> Age integer,
+    -> Contact_no varchar(100),
+    -> Address varchar(100),
+    -> Email varchar(100),
+    -> Rpt_id varchar(100),
+    -> PRIMARY KEY(D_id),
+    -> FOREIGN KEY(Rpt_id) REFERENCES Medical_Report(Report_id));
+Query OK, 0 rows affected (0.11 sec)
+
+
+mysql> CREATE TABLE Donates(
+    -> Donor_id varchar(100),
+    -> Bloodbank_id varchar(100),
+    -> Quantity integer,
+    -> Blood_group varchar(100),
+    -> PRIMARY KEY(Donor_id,Bloodbank_id),
+    -> FOREIGN KEY(Donor_id) REFERENCES Donor(D_id),
+    -> FOREIGN KEY(Bloodbank_id) REFERENCES Blood_Bank(Branch_id));
+Query OK, 0 rows affected (0.13 sec)
+
+
+mysql> CREATE TABLE Patient(
+    -> P_id varchar(100) NOT NULL,
+    -> P_name varchar(100),
+    -> Patient_Disease varchar(100),
+    -> Hospital varchar(100),
+    -> Blood_Group varchar(5),
+    -> PRIMARY KEY(P_id));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> CREATE TABLE Blood_request(
+    -> Request_id varchar(100) NOT NULL,
+    -> Bbank_id varchar(100),
+    -> Patient_id varchar(100),
+    -> Quantity integer,
+    -> Contact_no varchar(100),
+    -> Email varchar(100),
+    -> Bloodgroup varchar(5),
+    -> Confirmation varchar(5),
+    -> Amount integer,
+    -> PRIMARY KEY(Request_id),
+    -> FOREIGN KEY(Bbank_id ) REFERENCES Blood_Bank(Branch_id),
+    -> FOREIGN KEY(Patient_id) REFERENCES Patient(P_id));
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> INSERT INTO blood_bank VALUES('B1','Samarpan blood bank','Jaipur','282552'),('B2','Jan Suvidha blood bank','Ajmer','284423'),('B3','Burari blood bank',
+'Amer','223912');
+Query OK, 1 row affected (0.05 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM blood_bank;
++-----------+------------------------+----------------+------------+
+| Branch_id | Branch_name            | Branch_address | Contact_no |
++-----------+------------------------+----------------+------------+
+| B1        | Samarpan blood bank    | Jaipur         | 282552     |
+| B2        | Jan Suvidha blood bank | Ajmer          | 284423     |
+| B3        | Burari blood bank      | Amer           | 223912     |
++-----------+------------------------+----------------+------------+
+3 rows in set (0.00 sec)
+
+mysql>INSERT INTO Employee VALUES ('E1',' Abhishek kumar',23,'Kekri,Rajasthan','50000','7210282911','Manager','B1'),('E2','Atul joshi',22,'Sunderkhal,Uttarakhand','50000','8476282911',
+ 'Manager','B2'),('E3','Anurag Sharma ',24,'Sultana Ahiran,Rajasthan','50000','9876245323','Manager','B3');
+Query OK, 3 row affected (0.09 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Employee;
++------+----------------+------+--------------------------+--------+------------+-------------+---------+
+| E_id | Ename          | Age  | Address                  | Salary | Contact_no | Designation | Bank_id |
++------+----------------+------+--------------------------+--------+------------+-------------+---------+
+| E1   | Abhishek kumar |   23 | Kekri,Rajasthan          | 50000  | 7210282911 | Manager     | B1      |
+| E2   | Atul joshi     |   22 | Sunderkhal,Uttarakhand   | 50000  | 8476282911 | Manager     | B2      |
+| E3   | Anurag Sharma  |   24 | Sultana Ahiran,Rajasthan | 50000  | 9876245323 | Manager     | B3      |
++------+----------------+------+--------------------------+--------+------------+-------------+---------+
+3 rows in set (0.00 sec)
+
+
+mysql> INSERT INTO Stock VALUES('1','S1','A+','Available','B1'),('2','S1','A-','Available','B1'),('3','S1','B+','Available','B1'),('4','S1','B-','Available','B1'),
+('5','S1','AB-','Available','B1'),('6','S1','O','Available','B1'),('7','S2','B+','Available','B2'),('8','S2','A+','Available','B2'),('9','S2','O-','Available','B2'),
+('10','S2','AB-','Available','B2');
+Query OK, 10 row affected (0.14 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Stock;
++----------+------------+------------+-----------+------+
+| Stock_id | Stock_name | Bloodgroup | Quantity  | B_id |
++----------+------------+------------+-----------+------+
+| 1        | S1         | A+         | Available | B1   |
+| 10       | S2         | AB-        | Available | B2   |
+| 2        | S1         | A-         | Available | B1   |
+| 3        | S1         | B+         | Available | B1   |
+| 4        | S1         | B-         | Available | B1   |
+| 5        | S1         | AB-        | Available | B1   |
+| 6        | S1         | O          | Available | B1   |
+| 7        | S2         | B+         | Available | B2   |
+| 8        | S2         | A+         | Available | B2   |
+| 9        | S2         | O-         | Available | B2   |
++----------+------------+------------+-----------+------+
+10 rows in set (0.00 sec)
+
+
+mysql> INSERT INTO medical_report VALUES('R1','A+','NULL'),('R2','B+','Anemia'),('R3','AB-','Asthma'),('R4','AB+','NULL'),('R5','O+','NULL');
+Query OK, 5 row affected (0.09 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM medical_report;
++-----------+--------------+---------+
+| Report_id | D_bloodgroup | Disease |
++-----------+--------------+---------+
+| R1        | A+           | NULL    |
+| R2        | B+           | Anemia  |
+| R3        | AB-          | Asthma  |
+| R4        | AB+          | NULL    |
+| R5        | O+           | NULL    |
++-----------+--------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO donor VALUES('D1','Pawan bisht','21/04/2018','21','8700008414','Ramnagar,Uttarakhand','pawanbisht300@gmail.com','R1'),('D2','Anamika Anurag','12/01/2018',
+'23','7784382719','Patna,Bihar','anamikakiemailid@gmail.com','R2'),('D3','Shivankit raj','17/07/2018','23','7473728373','Peeragarhi,New Delhi','shivankitkiemailid@gmail.com',
+'R3'),('D4','Suraj maurya','1/12/2017','22','9838389322','Gorakhpur,Bihar','surajkiemailid@gmail.com','R4'),('D5','Hemraj kumawat','24/11/2017','25','9533229322',
+'Kekri,Rajasthan','hemrajkumawat392@gmail.com','R5');
+Query OK, 5 row affected (0.09 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM donor;
++------+----------------+------------+------+------------+----------------------+------------------------------+--------+
+| D_id | D_name         | Date       | Age  | Contact_no | Address              | Email                        | Rpt_id |
++------+----------------+------------+------+------------+----------------------+------------------------------+--------+
+| D1   | Pawan bisht    | 21/04/2018 |   21 | 8700008414 | Ramnagar,Uttarakhand | pawanbisht300@gmail.com      | R1     |
+| D2   | Anamika Anurag | 12/01/2018 |   23 | 7784382719 | Patna,Bihar          | anamikakiemailid@gmail.com   | R2     |
+| D3   | Shivankit raj  | 17/07/2018 |   23 | 7473728373 | Peeragarhi,New Delhi | shivankitkiemailid@gmail.com | R3     |
+| D4   | Suraj maurya   | 1/12/2017  |   22 | 9838389322 | Gorakhpur,Bihar      | surajkiemailid@gmail.com     | R4     |
+| D5   | Hemraj kumawat | 24/11/2017 |   25 | 9533229322 | Kekri,Rajasthan      | hemrajkumawat392@gmail.com   | R5     |
++------+----------------+------------+------+------------+----------------------+------------------------------+--------+
+5 rows in set (0.00 sec)
+
+
+mysql> INSERT INTO donates VALUES('D1','B1',2,'A+'),('D2','B1',3,'A-'),('D3','B2',2,'AB-'),('D4','B2',3,'O'),('D5','B3',2,'O-'),('D2','B3',3,'B-');
+Query OK, 6 rows affected (0.10 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM donates;
++----------+--------------+----------+-------------+
+| Donor_id | Bloodbank_id | Quantity | Blood_group |
++----------+--------------+----------+-------------+
+| D1       | B1           |        2 | A+          |
+| D2       | B1           |        3 | A-          |
+| D2       | B3           |        3 | B-          |
+| D3       | B2           |        2 | AB-         |
+| D4       | B2           |        3 | O           |
+| D5       | B3           |        2 | O-          |
++----------+--------------+----------+-------------+
+6 rows in set (0.00 sec)
+
+
+mysql> INSERT INTO patient VALUES('P1','Ajay kumar','Kidney Failure','A.I.I.M.S','A+'),('P2','Ankit Gahlon','Heart Problem','A.I.I.M.S','B-'),('P3','Amit kumar',
+'Liver Failure','Safdarjung Hospital','O+'),('P4','Abhishek Chand','Jaundice','Hera-Moti Hospital','AB-');
+Query OK, 4 rows affected (0.05 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM patient;
++------+----------------+-----------------+---------------------+-------------+
+| P_id | P_name         | Patient_Disease | Hospital            | Blood_Group |
++------+----------------+-----------------+---------------------+-------------+
+| P1   | Ajay kumar     | Kidney Failure  | A.I.I.M.S           | A+          |
+| P2   | Ankit Gahlon   | Heart Problem   | A.I.I.M.S           | B-          |
+| P3   | Amit kumar     | Liver Failure   | Safdarjung Hospital | O+          |
+| P4   | Abhishek Chand | Jaundice        | Hera-Moti Hospital  | AB-         |
++------+----------------+-----------------+---------------------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO blood_request VALUES('R1','B1','P1',3,'8932123442','demo1@gmail.com','A+','NO',250),('R2','B1','P2',2,'9233321345','demo2@gmail.com','O+','YES',220)
+,('R3','B2','P3',3,'98080463723','demo3@gmail.com','AB+','NO',320),('R4','B2','P4',2,'9342345644','demo4@gmail.com','B-','NO',210);
+Query OK, 4 rows affected (0.05 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM blood_request;
++------------+----------+------------+----------+-------------+-----------------+------------+--------------+--------+
+| Request_id | Bbank_id | Patient_id | Quantity | Contact_no  | Email           | Bloodgroup | Confirmation | Amount |
++------------+----------+------------+----------+-------------+-----------------+------------+--------------+--------+
+| R1         | B1       | P1         |        3 | 8932123442  | demo1@gmail.com | A+         | NO           |    250 |
+| R2         | B1       | P2         |        2 | 9233321345  | demo2@gmail.com | O+         | YES          |    220 |
+| R3         | B2       | P3         |        3 | 98080463723 | demo3@gmail.com | AB+        | NO           |    320 |
+| R4         | B2       | P4         |        2 | 9342345644  | demo4@gmail.com | B-         | NO           |    210 |
++------------+----------+------------+----------+-------------+-----------------+------------+--------------+--------+
+4 rows in set (0.00 sec)
+
+
+
+
